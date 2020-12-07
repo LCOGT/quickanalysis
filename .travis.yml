@@ -7,6 +7,6 @@ python:
 install:
   - pip install -r requirements.txt coverage coveralls pytest-cov
 script:
-  - pytest --cov=quickanalysis quickanalysis/tests
+  - pytest --cov=quickanalysis tests
 
 after_success: coveralls

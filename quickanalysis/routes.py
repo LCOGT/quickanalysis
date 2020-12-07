@@ -2,14 +2,14 @@
 from flask import Flask, request, jsonify
 import json
 
-from utils import hello_world
-from analysis.fakes import emptylist
+from quickanalysis import app
+from quickanalysis.utils import hello_world
+from quickanalysis.analysis.fakes import emptylist
 
-app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return jsonify({"two":two()})
+    return jsonify({"data":""})
 
 @app.route('/submit', methods=['POST'])
 def submit():
