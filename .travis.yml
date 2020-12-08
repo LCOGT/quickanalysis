@@ -17,6 +17,8 @@ deploy:
   app: "quickanalysis"
   env: "quickanalysis-environment"
   bucket_name: "quickanalysis-bucket"
+  on:
+    branch: main
 
 env:
   global:
