@@ -6,12 +6,12 @@ from flask import Flask, request, jsonify
 import json
 
 from quickanalysis.utils import hello_world
-from quickanalysis.analysis.fakes import emptylist
+from quickanalysis.analysis.fakes import emptylist, randomint
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return jsonify({"data":""})
+    return jsonify({"data":randomint()})
 
 
 @app.route('/empty', methods=['GET'])
