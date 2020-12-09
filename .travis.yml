@@ -1,6 +1,6 @@
 language: python
 python:
-- '3.8'
+- '3.7'
 install:
 - pip install -r requirements.txt coverage coveralls pytest-cov
 script:
@@ -13,7 +13,7 @@ deploy:
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   region: "us-east-1"
   app: "quickanalysis"
-  env: "quickanalysis-environment"
+  env: "quickanalysis-dev"
   bucket_name: "quickanalysis-bucket"
   on:
     branch: main
