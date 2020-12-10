@@ -10,7 +10,6 @@ from quickanalysis.utils import get_photonranch_image_url
 from quickanalysis.utils import check_if_s3_image_exists
 from quickanalysis.utils import data_array_from_url
 from quickanalysis.analysis.profile_line import get_intensity_profile
-from quickanalysis.analysis.profile_line import get_example_profile
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -35,11 +34,10 @@ def lineprofile():
     """
 
     # parse args
-    print(request.form['data'])
-    form_data = json.loads(request.form['data'])
-    start = (form_data['start']['x'], form_data['start']['y'])
-    end = (form_data['end']['x'], form_data['end']['y'])
-    full_filename = form_data['full_filename']
+    args = json.loads(request.get_data())
+    start = (args['start']['x'], args['start']['y'])
+    end = (args['end']['x'], args['end']['y'])
+    full_filename = args['full_filename']
 
     if not check_if_s3_image_exists(full_filename):
         return jsonify({
@@ -55,14 +53,6 @@ def lineprofile():
         "start": start,
         "end": end,
         "data": profile,
-    })
-
-@app.route('/lineprofile/example', methods=['GET'])
-def line_profile_example():
-
-    profile = get_example_profile() 
-    return jsonify({
-        "data": profile
     })
 
 

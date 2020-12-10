@@ -18,8 +18,6 @@ def get_photonranch_image_url(full_filename):
         Params=params,
         ExpiresIn=3600 # 1 hour
     )
-    print(url)
-
     return url
 
 
@@ -34,8 +32,6 @@ def check_if_s3_image_exists(full_filename):
     return True
 
 
-
 def data_array_from_url(url):
-    #return fits.open(url)[0].data
     return fits.getdata(url)
 

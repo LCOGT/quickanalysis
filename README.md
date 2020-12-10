@@ -21,7 +21,7 @@ import requests, json
 url = "http://127.0.0.1:5000/lineprofile"
 body = json.dumps({ 
     "full_filename": "tst-test-20201112-00000058-EX10.fits.bz2",             
-    # return the intensity profile for the line spanning the top left to bottom right corners.
+    # return the intensity profile for the line spanning the bottom left to top right corners.
     "start": {
         "x": 0,
         "y": 0,
