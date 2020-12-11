@@ -3,13 +3,34 @@ application = app = Flask(__name__)
 
 from flask import Flask, request, jsonify
 import json
-
 from astropy.io import fits
+from marshmallow import Schema, fields, ValidationError, validates_schema
 
 from quickanalysis.utils import get_photonranch_image_url
 from quickanalysis.utils import check_if_s3_image_exists
 from quickanalysis.utils import data_array_from_url
 from quickanalysis.analysis.profile_line import get_intensity_profile
+
+
+class LineProfileInput(Schema):
+    """ Parse and validate input for the line profile endpoint """
+    full_filename = fields.Str(required=True)
+    start = fields.Dict(keys=fields.Str(), values=fields.Float(), required=True)
+    end = fields.Dict(keys=fields.Str(), values=fields.Float(), required=True)
+
+    @validates_schema(skip_on_field_errors=True)
+    def validate_catalog(self, data, **kwargs):
+        point_coords = [
+            data['start']['x'], 
+            data['start']['y'], 
+            data['end']['x'], 
+            data['end']['y']
+        ]
+        print(point_coords)
+        for val in point_coords:
+            if val < 0 or val > 1:
+                raise ValidationError(
+                    'Input coordinates must be between 0 and 1')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -33,27 +54,44 @@ def lineprofile():
 
     """
 
-    # parse args
-    args = json.loads(request.get_data())
-    start = (args['start']['x'], args['start']['y'])
-    end = (args['end']['x'], args['end']['y'])
-    full_filename = args['full_filename']
+    try:
+        # Validate and parse args
+        args = LineProfileInput().load(json.loads(request.data))
+        start = (args['start']['x'], args['start']['y'])
+        end = (args['end']['x'], args['end']['y'])
+        full_filename = args['full_filename']
 
-    if not check_if_s3_image_exists(full_filename):
+        # Make sure the requested file exists
+        if not check_if_s3_image_exists(full_filename):
+            return jsonify({
+                "success": False,
+                "message": f"Image does not exist: {full_filename}."
+            }), 400
+
+        # Get the image data and compute a line profile
+        image_url = get_photonranch_image_url(full_filename)
+        data = data_array_from_url(image_url)
+        profile = get_intensity_profile(data, start, end)
+
         return jsonify({
-            "success": False,
-            "message": f"Image does not exist: {full_filename}."
+            "success": True,
+            "start": start,
+            "end": end,
+            "data": profile,
         })
 
-    image_url = get_photonranch_image_url(full_filename)
-    data = data_array_from_url(image_url)
-    profile = get_intensity_profile(data, start, end)
-    return jsonify({
-        "success": True,
-        "start": start,
-        "end": end,
-        "data": profile,
-    })
+    except ValidationError as e:
+        return jsonify({
+            "success": False,
+            "message": f"Validation error: {str(e)}",
+        }), 400
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": f"Error: {str(e)}",
+        }), 500
+
+
 
 
 if __name__ == "__main__":

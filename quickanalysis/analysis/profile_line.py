@@ -1,14 +1,5 @@
-import random
 import numpy as np
-
-# https://scikit-image.org/docs/dev/api/skimage.measure.html#profile-line
 from skimage.measure import profile_line
-from skimage import io
-from astropy.io import fits
-from auto_stretch.stretch import Stretch
-
-from quickanalysis.utils import get_photonranch_image_url
-
 
 def get_intensity_profile(image_data_array, start, end):
     ''' Compute an intensity profile between a start and end point.

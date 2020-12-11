@@ -3,6 +3,7 @@ import numpy as np
 
 from quickanalysis.analysis.profile_line import get_intensity_profile
 
+
 @pytest.fixture
 def x_gradient_image():
     """
@@ -19,6 +20,7 @@ def x_gradient_image():
     lin = np.linspace(0,3, 7) 
     gradient_image_data, _ = np.meshgrid(lin, lin)
     return gradient_image_data
+
 
 @pytest.fixture
 def y_gradient_image():
@@ -37,6 +39,7 @@ def y_gradient_image():
     _, gradient_image_data = np.meshgrid(lin, lin)
     return gradient_image_data
 
+
 def test_profile_line_x0(x_gradient_image):
     """ Ensure that the x-axis has x=0 at the left, not right. """
     start = (0,0)
@@ -45,6 +48,7 @@ def test_profile_line_x0(x_gradient_image):
     # x gradient)
     profile = get_intensity_profile(x_gradient_image, start, end)
     assert sum(profile) == 0
+
 
 def test_profile_line_y0(y_gradient_image):
     """ Ensure that the y-axis has y=0 at the bottom, not top. """
@@ -108,4 +112,3 @@ def test_profile_line_vertical_y_gradient(y_gradient_image):
 
     # All values should be increasing (ie. different)
     assert len(set(profile)) == len(profile)
-

@@ -1,16 +1,13 @@
-from flask import request
-import json
 import boto3
-import numpy as np
 from astropy.io import fits
+from quickanalysis import settings
 
-s3 = boto3.client('s3', 'us-east-1')
-bucket_name = 'photonranch-001'
+s3 = boto3.client('s3', settings.AWS_REGION)
 
 
 def get_photonranch_image_url(full_filename):
     params = {
-        'Bucket': bucket_name,
+        'Bucket': settings.S3_BUCKET,
         'Key': f'data/{full_filename}'
     }
     url = s3.generate_presigned_url(
@@ -24,10 +21,10 @@ def get_photonranch_image_url(full_filename):
 def check_if_s3_image_exists(full_filename):
     try:
         s3.head_object(
-            Bucket=bucket_name,
+            Bucket=settings.S3_BUCKET,
             Key=f'data/{full_filename}'
         )
-    except:
+    except Exception as e:
         return False
     return True
 
