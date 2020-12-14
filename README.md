@@ -18,7 +18,7 @@ Given the filename of an image in photon ranch and a line (start and end point),
 
 ```python
 import requests, json
-url = "http://127.0.0.1:5000/lineprofile"
+url = "http://quickanalysis-dev.us-east-1.elasticbeanstalk.com/lineprofile"
 body = json.dumps({ 
     "full_filename": "tst-test-20201112-00000058-EX10.fits.bz2",             
     # return the intensity profile for the line spanning the bottom left to top right corners.
