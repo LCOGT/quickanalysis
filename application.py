@@ -92,7 +92,5 @@ def lineprofile():
         }), 500
 
 
-
-
 if __name__ == "__main__":
     application.run()
