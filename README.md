@@ -10,6 +10,7 @@ QuickAnalysis is a server for running image analysis tasks that will make this v
 
 ## Analysis Tasks
 
+This server is accessible at http://quickanalysis.photonranch.org/.
 Available endpoints are described below:
 
 ### POST - /lineprofile
@@ -49,6 +50,11 @@ requests.post(url, body).json()
 ```
 
 ## Local Development
+
+### **Configure AWS Credentials**
+
+This application is designed to work with the AWS configuration used by photon ranch. 
+Ensure your system has the appropriate photon ranch [AWS credentials and config files](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) in order to run this application on your machine.
 
 ### **Set up a [virtual environment](https://docs.python.org/3/tutorial/venv.html)**
 
