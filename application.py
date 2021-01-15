@@ -1,5 +1,7 @@
 from flask import Flask
+from flask_cors import CORS, cross_origin
 application = app = Flask(__name__)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 from flask import Flask, request, jsonify
 import json
@@ -39,6 +41,7 @@ def home():
 
 
 @app.route('/lineprofile', methods=['POST'])
+@cross_origin()
 def lineprofile():
     """ Return a line profile.
 
@@ -73,12 +76,14 @@ def lineprofile():
         data = data_array_from_url(image_url)
         profile = get_intensity_profile(data, start, end)
 
-        return jsonify({
+        response = jsonify({
             "success": True,
             "start": start,
             "end": end,
             "data": profile,
         })
+        return response
+
 
     except ValidationError as e:
         return jsonify({
