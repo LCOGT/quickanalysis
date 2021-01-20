@@ -3,7 +3,7 @@ from flask_cors import CORS, cross_origin
 application = app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, render_template_string
 import json
 from astropy.io import fits
 from marshmallow import Schema, fields, ValidationError, validates_schema
@@ -12,6 +12,7 @@ from quickanalysis.utils import get_photonranch_image_url
 from quickanalysis.utils import check_if_s3_image_exists
 from quickanalysis.utils import data_array_from_url
 from quickanalysis.analysis.profile_line import get_intensity_profile
+from quickanalysis.analysis.profile_line import get_intensity_profile_input_plot
 
 
 class LineProfileInput(Schema):
@@ -38,6 +39,25 @@ class LineProfileInput(Schema):
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return jsonify({"data":"welcome"})
+
+
+@app.route("/lineprofiledisplay", methods=["GET"])
+def plotView():
+    """ This is a route to visualize the line requested for the line profile."""
+    filename = request.args.get('filename')
+    x0 = float(request.args.get('x0'))
+    x1 = float(request.args.get('x1'))
+    y0 = float(request.args.get('y0'))
+    y1 = float(request.args.get('y1'))
+
+    image_url = get_photonranch_image_url(filename)
+    data = data_array_from_url(image_url)
+    start = (x0, y0)
+    end = (x1, y1)
+    profile = get_intensity_profile(data, start, end)
+    selection_plot = get_intensity_profile_input_plot(data, start, end)
+    
+    return render_template_string("<img src='{{ image }}'/><div>{{data}}</div>", image=selection_plot, data=profile)
 
 
 @app.route('/lineprofile', methods=['POST'])

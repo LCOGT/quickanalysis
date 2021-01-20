@@ -1,7 +1,11 @@
 import pytest
 import numpy as np
+import base64
+from mimetypes import guess_extension
 
 from quickanalysis.analysis.profile_line import get_intensity_profile
+from quickanalysis.analysis.profile_line import get_intensity_profile_input_plot
+from quickanalysis.analysis.profile_line import get_pixel_dimensions
 
 
 @pytest.fixture
@@ -12,13 +16,11 @@ def x_gradient_image():
     [[0.  0.5 1.  1.5 2.  2.5 3. ]
      [0.  0.5 1.  1.5 2.  2.5 3. ]
      [0.  0.5 1.  1.5 2.  2.5 3. ]
-     [0.  0.5 1.  1.5 2.  2.5 3. ]
-     [0.  0.5 1.  1.5 2.  2.5 3. ]
-     [0.  0.5 1.  1.5 2.  2.5 3. ]
      [0.  0.5 1.  1.5 2.  2.5 3. ]]
     """
     lin = np.linspace(0,3, 7) 
     gradient_image_data, _ = np.meshgrid(lin, lin)
+    gradient_image_data = gradient_image_data[0:4] # make it rectangular
     return gradient_image_data
 
 
@@ -30,14 +32,26 @@ def y_gradient_image():
     [[0.  0.  0.  0.  0.  0.  0. ]
      [0.5 0.5 0.5 0.5 0.5 0.5 0.5]
      [1.  1.  1.  1.  1.  1.  1. ]
-     [1.5 1.5 1.5 1.5 1.5 1.5 1.5]
-     [2.  2.  2.  2.  2.  2.  2. ]
-     [2.5 2.5 2.5 2.5 2.5 2.5 2.5]
-     [3.  3.  3.  3.  3.  3.  3. ]]
+     [1.5 1.5 1.5 1.5 1.5 1.5 1.5]]
     """
     lin = np.linspace(0,3, 7) 
     _, gradient_image_data = np.meshgrid(lin, lin)
+    gradient_image_data = gradient_image_data[0:4] # make it rectangular
     return gradient_image_data
+
+
+def test_get_pixel_vals_corners(x_gradient_image):
+    start = (0, 0)
+    end = (1, 1)
+    x0, y0, x1, y1 = get_pixel_dimensions(x_gradient_image, start, end)
+    assert x0 == 0 and y0 == 0 and x1 == 6 and y1 == 3
+
+
+def test_get_pixel_vals_middle(x_gradient_image):
+    start = (0, 0)
+    end = (0, 0.5)
+    x0, y0, x1, y1 = get_pixel_dimensions(x_gradient_image, start, end)
+    assert y1 == 1.5
 
 
 def test_profile_line_x0(x_gradient_image):
@@ -51,9 +65,9 @@ def test_profile_line_x0(x_gradient_image):
 
 
 def test_profile_line_y0(y_gradient_image):
-    """ Ensure that the y-axis has y=0 at the bottom, not top. """
-    start = (0,1)
-    end = (1, 1)
+    """ Ensure that the y-axis has y=0 at the top, not bottom. """
+    start = (0,0)
+    end = (1, 0)
     # This should return an array of zeros (the top horizontal line of the 
     # y gradient)
     profile = get_intensity_profile(y_gradient_image, start, end)

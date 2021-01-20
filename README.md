@@ -22,7 +22,7 @@ import requests, json
 url = "http://quickanalysis.photonranch.org/lineprofile"
 body = json.dumps({ 
     "full_filename": "tst-test-20201112-00000058-EX10.fits.bz2",             
-    # return the intensity profile for the line spanning the bottom left to top right corners.
+    # return the intensity profile for the line spanning the top left to bottom right corners.
     "start": {
         "x": 0,
         "y": 0,
