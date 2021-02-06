@@ -8,9 +8,8 @@ import json
 from astropy.io import fits
 from marshmallow import Schema, fields, ValidationError, validates_schema
 
-from quickanalysis.utils import get_photonranch_image_url
-from quickanalysis.utils import check_if_s3_image_exists
-from quickanalysis.utils import data_array_from_url
+from quickanalysis.utils.load_data import check_if_s3_image_exists
+from quickanalysis.utils.load_data import get_image_data
 from quickanalysis.analysis.profile_line import get_intensity_profile
 from quickanalysis.analysis.profile_line import get_intensity_profile_input_plot
 
@@ -50,8 +49,7 @@ def plotView():
     y0 = float(request.args.get('y0'))
     y1 = float(request.args.get('y1'))
 
-    image_url = get_photonranch_image_url(filename)
-    data = data_array_from_url(image_url)
+    data = get_image_data(filename)
     start = (x0, y0)
     end = (x1, y1)
     profile = get_intensity_profile(data, start, end)
@@ -92,8 +90,7 @@ def lineprofile():
             }), 400
 
         # Get the image data and compute a line profile
-        image_url = get_photonranch_image_url(full_filename)
-        data = data_array_from_url(image_url)
+        data = get_image_data(full_filename)
         profile = get_intensity_profile(data, start, end)
 
         response = jsonify({
