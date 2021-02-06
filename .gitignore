@@ -9,3 +9,7 @@ __pycache__
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# development sandbox: ignore anything besides the example
+dev_sandbox/*
+!dev_sandbox/example.ipynb
