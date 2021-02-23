@@ -45,7 +45,7 @@ def get_histogram(arr, bin_size=None, clip_percent=None, bitpix=16, exclude_zero
   # Default range should include the whole image
   low_val = np.min(arr)
   high_val = np.max(arr)
-  print(f"{low_val=}, {high_val=}")
+  print(f"low val: {low_val}, high val: {high_val}")
 
   # Or use percentage clipping to determine the range (if clip_percent is specified)
   if clip_percent is not None:
