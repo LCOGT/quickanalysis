@@ -1,0 +1,54 @@
+#TODO: this is wrong/incomplete
+
+Get statistics for an image or subregion.
+Call this api passing a language name and get back its features
+---
+tags:
+  - Awesomeness Language API
+parameters:
+  - name: full_filename
+    in: body
+    required: true
+    description: photon ranch filename in s3, including the extension
+    schema:
+      type: object
+      properties: 
+        full_filename: 
+          type: string
+
+  #- name: subregion
+  #  in: body
+  #  required: false
+  #  schema:
+  #    type: object
+  #    properties:
+  #      shape: 
+  #        type: string
+  #        description: the type of shape of the region (rect, circle)
+  #      x0: 
+  #        type: number
+  #      x1:
+  #        type: number
+  #      y0:
+  #        type: number
+  #      y1:
+  #        type: number
+  #  description: optional subregion to use for analysis
+responses:
+  500:
+    description: 500 error
+  200:
+    description: Success
+    schema:
+      id: awesome
+      properties:
+        language:
+          type: string
+          description: The language name
+          default: Lua
+        features:
+          type: array
+          description: The awesomeness list
+          items:
+            type: string
+          default: ["perfect", "simple", "lovely"]
