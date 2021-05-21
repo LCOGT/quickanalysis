@@ -27,6 +27,7 @@ from quickanalysis.analysis.region_stats import get_mode, get_median, get_mean, 
 class LineProfileInput(Schema):
     """ Parse and validate input for the line profile endpoint """
     full_filename = fields.Str(required=True)
+    s3_directory = fields.Str(required=True)
     start = fields.Dict(keys=fields.Str(), values=fields.Float(), required=True)
     end = fields.Dict(keys=fields.Str(), values=fields.Float(), required=True)
 
@@ -54,12 +55,13 @@ def home():
 def plotView():
     """ This is a route to visualize the line requested for the line profile."""
     filename = request.args.get('filename')
+    s3_directory = request.args.get('s3_directory')
     x0 = float(request.args.get('x0'))
     x1 = float(request.args.get('x1'))
     y0 = float(request.args.get('y0'))
     y1 = float(request.args.get('y1'))
 
-    data = get_image_data(filename)
+    data = get_image_data(filename, s3_directory)
     start = (x0, y0)
     end = (x1, y1)
     profile = get_intensity_profile(data, start, end)
@@ -77,11 +79,12 @@ def lineprofile():
         start (dict): 'x' and 'y' values for the line start point, in [0, 1]
         end (dict): same as start
         full_filename (str): photon ranch filename in s3, including the extension.
+        s3_directory (str): the 'folder' that the image resides in s3. [ data | info-images | allsky ]
 
     Example post request:
     curl -X POST http://localhost:5000/lineprofile -F \
         'data={"start":{"x": 0, "y":0}, "end": {"x": 1, "y": 1}, 
-        "full_filename": "tst-test-20201112-00000058-EX01.fits.bz2"}'
+        "full_filename": "tst-test-20201112-00000058-EX01.fits.bz2", "s3_directory": "data"}'
 
     """
 
@@ -91,16 +94,17 @@ def lineprofile():
         start = (args['start']['x'], args['start']['y'])
         end = (args['end']['x'], args['end']['y'])
         full_filename = args['full_filename']
+        s3_directory = args['s3_directory']
 
         # Make sure the requested file exists
-        if not check_if_s3_image_exists(full_filename):
+        if not check_if_s3_image_exists(full_filename, s3_directory):
             return jsonify({
                 "success": False,
-                "message": f"Image does not exist: {full_filename}."
+                "message": f"Image does not exist: {s3_directory}/{full_filename}."
             }), 400
 
         # Get the image data and compute a line profile
-        data = get_image_data(full_filename)
+        data = get_image_data(full_filename, s3_directory)
         profile = get_intensity_profile(data, start, end)
 
         response = jsonify({
@@ -134,15 +138,16 @@ def image_statistics():
 
     args = json.loads(request.data)
     full_filename = args['full_filename']
+    s3_directory = args['s3_directory']
 
     # Make sure the requested file exists
-    if not check_if_s3_image_exists(full_filename):
+    if not check_if_s3_image_exists(full_filename, s3_directory):
         return jsonify({
             "success": False,
-            "message": f"Image does not exist: {full_filename}."
+            "message": f"Image does not exist: {s3_directory}/{full_filename}."
         }), 400
 
-    image_data = get_image_data(full_filename)
+    image_data = get_image_data(full_filename, s3_directory)
     if 'subregion' in args.keys():
         coords = args['subregion']
         image_data = get_subregion_rect(image_data, coords['x0'], coords['x1'], coords['y0'], coords['y1'] )
@@ -172,6 +177,7 @@ def histogram():
     
     POST Args:
         full_filename (str): full file name for analysis, including the file extensions. 
+        s3_directory (str): the 'folder' that the image resides in s3. [ data | info-images | allsky ]
         clip_percent (float): percentile value of intensity to define min and max range of histogram
         subregion (dict): optional, analyze subregion of image
         subregion['shape'] (str): type of shape. Currently only supports 'rect'.
@@ -186,17 +192,18 @@ def histogram():
 
     args = json.loads(request.data)
     full_filename = args['full_filename']
+    s3_directory = args['s3_directory']
     clip_percent = args['clip_percent']
     print(full_filename, clip_percent)
 
     # Make sure the requested file exists
-    if not check_if_s3_image_exists(full_filename):
+    if not check_if_s3_image_exists(full_filename, s3_directory):
         return jsonify({
             "success": False,
-            "message": f"Image does not exist: {full_filename}."
+            "message": f"Image does not exist: {s3_directory}/{full_filename}."
         }), 400
 
-    image_data = get_image_data(full_filename)
+    image_data = get_image_data(full_filename, s3_directory)
     if 'subregion' in args.keys():
         coords = args['subregion']
         image_data = get_subregion_rect(image_data, coords['x0'], coords['x1'], coords['y0'], coords['y1'] )

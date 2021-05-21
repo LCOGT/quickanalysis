@@ -11,22 +11,23 @@ s3 = boto3.client('s3', settings.AWS_REGION)
 URL_EXPIRATION = 3600
 MAX_CACHE_SIZE = 1e8  # the max `sys.getsizeof(x)` size for the cache
 
-def check_if_s3_image_exists(full_filename):
+def check_if_s3_image_exists(full_filename, s3_directory):
     try:
         s3.head_object(
             Bucket=settings.S3_BUCKET,
-            Key=f'data/{full_filename}'
+            Key=f'{s3_directory}/{full_filename}'
         )
     except Exception as e:
         return False
     return True
 
 
-@cached(cache=TTLCache(maxsize=1024, ttl=URL_EXPIRATION))
-def get_image_data(full_filename):
+#@cached(cache=TTLCache(maxsize=1024, ttl=URL_EXPIRATION))
+def get_image_data(full_filename, s3_directory):
+    print('FULL FILENAME: ',full_filename)
     params = {
         'Bucket': settings.S3_BUCKET,
-        'Key': f'data/{full_filename}'
+        'Key': f'{s3_directory}/{full_filename}'
     }
     url = s3.generate_presigned_url(
         ClientMethod='get_object',
