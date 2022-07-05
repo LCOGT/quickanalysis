@@ -3,11 +3,20 @@
 [![Build Status](https://travis-ci.com/LCOGT/quickanalysis.svg?branch=main)](https://travis-ci.com/LCOGT/quickanalysis)
 [![Coverage Status](https://coveralls.io/repos/github/LCOGT/quickanalysis/badge.svg?branch=main)](https://coveralls.io/github/LCOGT/quickanalysis?branch=main)
 
-## Server-side image analysis for Photon Ranch observing sessions
-
 Users running a real-time observing session with the Photon Ranch web application need to verify the quality of their incoming images.
 QuickAnalysis is a server for running image analysis tasks that will make this verification faster and easier than having users download images for local analysis.
 
+## Description
+
+This repository defines the server-side image analysis for Photon Ranch observing sessions. To assess the quality of incoming images, users can get a line profile for a given line, as well as statistics (mean, mode, median, min, max, std, median abs deviation) or a histogram of their image or of a rectangular subregion of their image.
+
+Example use of the different API endpoints in the frontend are shown below.
+
+![Line Profile](images/line.png)
+
+![Statistics](images/stats.png)
+
+![Histogram](images/histogram.png)
 
 ## Local Development
 
