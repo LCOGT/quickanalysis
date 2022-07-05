@@ -1,6 +1,5 @@
 # QuickAnalysis
 
-[![Build Status](https://travis-ci.com/LCOGT/quickanalysis.svg?branch=main)](https://travis-ci.com/LCOGT/quickanalysis)
 [![Coverage Status](https://coveralls.io/repos/github/LCOGT/quickanalysis/badge.svg?branch=main)](https://coveralls.io/github/LCOGT/quickanalysis?branch=main)
 
 Users running a real-time observing session with the Photon Ranch web application need to verify the quality of their incoming images.
