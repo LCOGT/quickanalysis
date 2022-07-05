@@ -25,7 +25,7 @@ from quickanalysis.analysis.region_stats import get_mode, get_median, get_mean, 
 
 
 class LineProfileInput(Schema):
-    """ Parse and validate input for the line profile endpoint """
+    """Parse and validate input for the line profile endpoint."""
     full_filename = fields.Str(required=True)
     s3_directory = fields.Str(required=True)
     start = fields.Dict(keys=fields.Str(), values=fields.Float(), required=True)
@@ -53,7 +53,19 @@ def home():
 
 @app.route("/lineprofiledisplay", methods=["GET"])
 def plotView():
-    """ This is a route to visualize the line requested for the line profile."""
+    """This is a route to visualize the line requested for the line profile.
+    
+    Args:
+        x0 (float): 'x' value for the line start point
+        x1 (float): 'x' value for the line end point
+        y0 (float): 'y' value for the line start point
+        y1 (float): 'y' value for the line end point
+        filename (str): Photon Ranch filename in S3, including the extension.
+        s3_directory (str): The 'folder' that the image resides in s3. [ data | info-images | allsky ]
+        
+    Returns:
+        Str: PNG of line intensity plot represented by a base 64 string
+    """
     filename = request.args.get('filename')
     s3_directory = request.args.get('s3_directory')
     x0 = float(request.args.get('x0'))
@@ -73,13 +85,19 @@ def plotView():
 @app.route('/lineprofile', methods=['POST'])
 @cross_origin()
 def lineprofile():
-    """ Return a line profile.
+    """Return a line profile.
 
-    POST args:
+    Args:
         start (dict): 'x' and 'y' values for the line start point, in [0, 1]
-        end (dict): same as start
-        full_filename (str): photon ranch filename in s3, including the extension.
-        s3_directory (str): the 'folder' that the image resides in s3. [ data | info-images | allsky ]
+        end (dict): Same as start
+        full_filename (str): Photon Ranch filename in S3, including the extension.
+        s3_directory (str): The 'folder' that the image resides in s3. [ data | info-images | allsky ]
+
+    Returns:
+        success (boolean): Successful line profile
+        start (dict): Same as request body
+        end (dict): Same as request body
+        data (list): List of intensity values between start and end point
 
     Example post request:
     curl -X POST http://localhost:5000/lineprofile -F \
@@ -132,9 +150,34 @@ def lineprofile():
 @cross_origin()
 @swag_from('endpoint_docs/image_statistics.yml')
 def image_statistics(): 
-    """ Return statistics for an image or subregion. """
+    """Return statistics for an image or subregion.
+    
+    Args:
+        subregion (dict): Optional description (in range [0,1]) of the subregion
+        subregion['x0'] (float): 'x' value for the rectangle left edge
+        subregion['x1'] (float): 'x' value for the rectangle right edge
+        subregion['y0'] (float): 'y' value for the rectangle top edge
+        subregion['y1'] (float): 'y' value for the rectangle bottom edge
+        full_filename (str): Photon Ranch filename in S3, including the extension.
+        s3_directory (str): The 'folder' that the image resides in s3. [ data | info-images | allsky ]
 
-    # TODO: input documentation and validation
+    Example Response: 
+        success (bool): True,
+        stats (dict): {
+            "median": 158,
+            "mean": 176.539,
+            "mode": 155,
+            "min": 51,
+            "max": 64963,
+            "std": 218.401,
+            "median_abs_deviation": 12,
+        }
+        params: json.loads(request.data)
+        }
+    
+    """
+
+    # TODO: validation
 
     args = json.loads(request.data)
     full_filename = args['full_filename']
@@ -173,7 +216,7 @@ def image_statistics():
 @cross_origin()
 @swag_from('endpoint_docs/histogram.yml')
 def histogram(): 
-    """ Return statistics for an image or subregion. 
+    """Return statistics for an image or subregion. 
     
     POST Args:
         full_filename (str): full file name for analysis, including the file extensions. 
@@ -181,11 +224,25 @@ def histogram():
         clip_percent (float): percentile value of intensity to define min and max range of histogram
         subregion (dict): optional, analyze subregion of image
         subregion['shape'] (str): type of shape. Currently only supports 'rect'.
-        subregion['x0'] (float): coordinate defining the rect subregion (in range [0,1])
-        subregion['x1'] (float): 
-        subregion['y0'] (float): 
-        subregion['y1'] (float): 
+        subregion['x0'] (float): 'x' value for the rectangle left edge
+        subregion['x1'] (float): 'x' value for the rectangle right edge
+        subregion['y0'] (float): 'y' value for the rectangle top edge
+        subregion['y1'] (float): 'y' value for the rectangle bottom edge
     
+    Example Response:
+            "success": True,
+            "histogram": {
+                "edges": [106, 107, ... 1405],
+                "counts": [415, 438, ....4152],
+                "stats": {
+                        "median": 158,
+                        "mean": 176.539,
+                        "mode": 155,
+                        "min": 51,
+                        "max": 64963,
+                }
+            },
+            "params": json.loads(request.data)
     """
 
     # TODO: input documentation and validation

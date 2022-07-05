@@ -1,7 +1,7 @@
 import numpy as np
 
 def get_num_bins(bin_size, min_val, max_val):
-  """ Given the bin size, how many bins are necessary to cover the given range of values? 
+  """Given the bin size, how many bins are necessary to cover the given range of values? 
 
   This is a helper method for computing image histograms. 
 
@@ -24,7 +24,7 @@ def get_num_bins(bin_size, min_val, max_val):
   return q + 1
 
 def get_histogram(arr, bin_size=None, clip_percent=None, bitpix=16, exclude_zero=False):
-  """ Compute a histogram for the provided image data array ""
+  """Compute a histogram for the provided image data array.
 
   Args:
     arr (n-dimensional numpy array): the data to analyze
