@@ -43,6 +43,33 @@ is used to denote commands that should be run using your virtual environment.
 
 The quickanalysis server should now be accessible from <http://127.0.0.1:5000>!
 
+## Deployment
+
+Deploy the application using the elastic beanstalk cli.
+This should already be installed in your virtual environment (see Local Development above).
+Additionally, ensure that you have aws credentials configured on your machine.
+
+### Initialize the CLI
+
+If this is a new environment, initialize elastic beanstalk with `$ eb init`.
+
+Select the region `us-east-1`, select the `quickanalysis` application, select `no` for CodeCommit.
+
+We currently use a single dev environment for this application. With `$ eb list`, verify that `quickanalysis-dev` is selected.
+
+### Deploy
+
+With cli initialized and configured, we can deploy by running `$ eb deploy`.
+
+For more information on using the eb cli, please refer to the [aws documentation](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html).
+
+## Monitoring and Debugging
+
+Monitoring and debugging are both possible through the elastic beanstalk console.
+You can navigate to the console on your own, or with the eb cli by running `$ eb console`.
+
+Logs can also be retrieved directly in your terminal with `$ eb logs`.
+
 ## API Endpoints
 
 This server is accessible at http://quickanalysis.photonranch.org/.
