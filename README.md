@@ -26,12 +26,7 @@ Ensure your system has the appropriate photon ranch [AWS credentials and config 
 
 ### **Set up a [virtual environment](https://docs.python.org/3/tutorial/venv.html)**
 
-Using a virtual environment is highly recommended. Run the following commands from the base of this project. `(venv)`
-is used to denote commands that should be run using your virtual environment.
-
-    python3 -m venv venv
-    source venv/bin/activate
-    (venv) pip install -r requirements.txt
+Using a virtual environment is highly recommended. Create and activate the virtual environment with python >= 3.7 and install the dependencies in `requirements.txt`.
 
 ### **Run the tests**
 
@@ -45,17 +40,23 @@ The quickanalysis server should now be accessible from <http://127.0.0.1:5000>!
 
 ## Deployment
 
-Deploy the application using the Elastic Veanstalk CLI.
-This should already be installed in your virtual environment (see Local Development above).
-Additionally, ensure that you have AWS credentials configured on your machine.
+Deployment happens automatically when changes are pushed to the main, dev, or test branches.
+But you can also manually deploy the application using the Elastic Beanstalk CLI.
 
+### Prerequisites
+
+You will need the Elastic Beanstalk (eb) CLI, which should be available if you installed everything in requirements.txt.
+Otherwise, run `$ pip install awsebcli`.
+
+Additionally, ensure that you have AWS credentials configured on your machine.
 ### Initialize the CLI
 
 If this is a new environment, initialize Elastic Beanstalk with `$ eb init`.
 
 Select the region `us-east-1`, select the `quickanalysis` application, select `no` for CodeCommit.
 
-We currently use a single dev environment for this application. With `$ eb list`, verify that `quickanalysis-dev` is selected.
+We currently have three environments: `quickanalysis-test`, `quickanalysis-dev`, and `quickanalysis-prod`.
+Ensure the one you want to use is selected with `$ eb list`, or select one with `$ eb use [environment]`.
 
 ### Deploy
 
