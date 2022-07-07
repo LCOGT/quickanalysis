@@ -42,7 +42,7 @@ marshmallow==3.9.1
 matplotlib==3.3.3
 mistune==2.0.3
 networkx==2.5
-numpy==1.19.4
+numpy==1.22.0
 packaging==20.7
 paramiko==2.7.2
 pathspec==0.9.0
