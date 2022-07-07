@@ -45,13 +45,13 @@ The quickanalysis server should now be accessible from <http://127.0.0.1:5000>!
 
 ## Deployment
 
-Deploy the application using the elastic beanstalk cli.
+Deploy the application using the Elastic Veanstalk CLI.
 This should already be installed in your virtual environment (see Local Development above).
-Additionally, ensure that you have aws credentials configured on your machine.
+Additionally, ensure that you have AWS credentials configured on your machine.
 
 ### Initialize the CLI
 
-If this is a new environment, initialize elastic beanstalk with `$ eb init`.
+If this is a new environment, initialize Elastic Beanstalk with `$ eb init`.
 
 Select the region `us-east-1`, select the `quickanalysis` application, select `no` for CodeCommit.
 
@@ -59,14 +59,14 @@ We currently use a single dev environment for this application. With `$ eb list`
 
 ### Deploy
 
-With cli initialized and configured, we can deploy by running `$ eb deploy`.
+With CLI initialized and configured, we can deploy by running `$ eb deploy`.
 
-For more information on using the eb cli, please refer to the [aws documentation](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html).
+For more information on using the eb CLI, please refer to the [AWS documentation](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html).
 
 ## Monitoring and Debugging
 
-Monitoring and debugging are both possible through the elastic beanstalk console.
-You can navigate to the console on your own, or with the eb cli by running `$ eb console`.
+Monitoring and debugging are both possible through the Elastic Beanstalk console.
+You can navigate to the console on your own, or with the eb CLI by running `$ eb console`.
 
 Logs can also be retrieved directly in your terminal with `$ eb logs`.
 
