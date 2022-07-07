@@ -43,8 +43,8 @@ jobs:
 
   deploy-to-test:
     # Only run this job if "build" has ended successfully
-    #needs:
-      #- build
+    needs:
+      - build
       
     runs-on: ubuntu-latest
 
