@@ -91,4 +91,4 @@ jobs:
       # Deploy to (or Create) the Elastic Beanstalk environment
       - name: Create test environment & deploy
         run: |
-          (eb use quickanalysis-test && eb status quickanalysis-test && eb deploy) || eb create quickanlaysis-test
+          (eb use quickanalysis-test && eb status quickanalysis-test && eb deploy) || eb create quickanalysis-test
