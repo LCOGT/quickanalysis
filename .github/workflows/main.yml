@@ -61,7 +61,7 @@ jobs:
         run: |
           python -m pytest
 
-  deploy-to-test:
+  deploy:
     needs:
       - eb-env
       - test
