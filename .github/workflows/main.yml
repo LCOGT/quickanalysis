@@ -2,9 +2,19 @@ name: CI
 
 on:
   push:
-    branches: [test]
+    branches: [main, dev, test]
 
 jobs:
+
+  eb-env:
+    outputs:
+      env-name: ${{ steps.env-name.outputs.env }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Environment Name
+        id: env-name
+        run: echo "::set-output name=env::${{ fromJSON('{"main":"prod","dev":"dev","test":"test"}')[github.ref_name] }}"
+
   build:
     runs-on: ubuntu-latest
 
@@ -51,6 +61,7 @@ jobs:
   deploy-to-test:
     # Only run this job if "build" has ended successfully
     needs:
+      - eb-env
       - build
       
     runs-on: ubuntu-latest
@@ -98,4 +109,6 @@ jobs:
       # Deploy to (or Create) the Elastic Beanstalk environment
       - name: Create test environment & deploy
         run: |
-          (eb use quickanalysis-test && eb status quickanalysis-test && eb deploy) || eb create quickanalysis-test
+          (eb use quickanalysis-${{ needs.eb-env.outputs.env-name }} \
+            && eb status quickanalysis-${{ needs.eb-env.outputs.env-name }} && eb deploy \
+            ) || eb create quickanalysis-${{ needs.eb-env.outputs.env-name }}
