@@ -9,7 +9,7 @@ botocore==1.23.54
 cached-property==1.5.2
 cachetools==5.2.0
 cement==2.8.2
-certifi==2020.12.5
+certifi==2022.12.7
 cffi==1.14.4
 chardet==3.0.4
 charset-normalizer==2.0.12
