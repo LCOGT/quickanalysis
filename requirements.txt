@@ -25,7 +25,7 @@ docker-compose==1.25.5
 dockerpty==0.4.1
 docopt==0.6.2
 flasgger==0.9.5
-Flask==1.1.2
+Flask==2.3.2
 Flask-Cors==3.0.10
 future==0.16.0
 idna==2.10
