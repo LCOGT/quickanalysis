@@ -71,7 +71,7 @@ texttable==1.6.3
 tifffile==2020.12.8
 toml==0.10.2
 typing-extensions==3.7.4.3
-urllib3==1.26.9
+urllib3==1.26.18
 wcwidth==0.1.9
 websocket-client==0.57.0
 Werkzeug==1.0.1
