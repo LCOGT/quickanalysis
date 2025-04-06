@@ -1,3 +1,6 @@
+# Note: This repository has been archived as it is no longer used by Photon Ranch.
+
+
 # QuickAnalysis
 
 [![Coverage Status](https://coveralls.io/repos/github/LCOGT/quickanalysis/badge.svg?branch=main)](https://coveralls.io/github/LCOGT/quickanalysis?branch=main)
